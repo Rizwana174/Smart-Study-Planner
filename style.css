@@ -1,0 +1,167 @@
+/* 🌈 Default Light Theme Variables */
+:root {
+  --bg-color: #f1f2f6;
+  --container-bg: #ffffff;
+  --text-color: #2d3436;
+  --accent: #0984e3;
+  --accent-hover: #74b9ff;
+  --task-bg: #dfe6e9;
+  --completed-bg: #b2bec3;
+  --progress-color: #00b894;
+}
+
+/* 🌙 Dark Theme Variables */
+body.dark-mode {
+  --bg-color: #1e272e;
+  --container-bg: #485460;
+  --text-color: #f5f6fa;
+  --accent: #00a8ff;
+  --accent-hover: #0097e6;
+  --task-bg: #596275;
+  --completed-bg: #718093;
+  --progress-color: #4cd137;
+}
+
+/* General Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background: var(--bg-color);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-color);
+  transition: background 0.3s, color 0.3s;
+}
+
+.container {
+  background: var(--container-bg);
+  width: 90%;
+  max-width: 600px;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: background 0.3s;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+h1 {
+  font-size: 24px;
+}
+
+#themeToggle {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--text-color);
+  transition: 0.3s;
+}
+
+#themeToggle:hover {
+  color: var(--accent);
+}
+
+.task-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.task-input input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #b2bec3;
+}
+
+button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: var(--accent-hover);
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--task-bg);
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+
+.task-item.completed {
+  text-decoration: line-through;
+  background: var(--completed-bg);
+}
+
+.task-buttons button {
+  margin-left: 5px;
+  background: none;
+  color: var(--text-color);
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.task-buttons button:hover {
+  color: var(--accent);
+}
+
+.progress-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.progress-bar {
+  width: 100%;
+  background: #dfe6e9;
+  height: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress {
+  width: 0%;
+  height: 100%;
+  background: var(--progress-color);
+  transition: width 0.3s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .task-input {
+    flex-direction: column;
+  }
+  .task-input input, button {
+    width: 100%;
+  }
+}

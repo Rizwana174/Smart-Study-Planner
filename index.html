@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Study Planner</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome for Icons -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📚 Smart Study Planner</h1>
+      <button id="themeToggle"><i class="fas fa-moon"></i></button>
+    </div>
+
+    <div class="task-input">
+      <input type="text" id="subject" placeholder="Enter Subject" required>
+      <input type="text" id="topic" placeholder="Enter Topic" required>
+      <input type="date" id="dueDate" required>
+      <button id="addTaskBtn"><i class="fas fa-plus"></i> Add Task</button>
+    </div>
+
+    <div class="task-list">
+      <h2>Your Study Tasks</h2>
+      <ul id="taskContainer"></ul>
+    </div>
+
+    <div class="progress-section">
+      <h3>Progress</h3>
+      <div class="progress-bar">
+        <div class="progress" id="progress"></div>
+      </div>
+      <p id="progressText">0% Completed</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
