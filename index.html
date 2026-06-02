@@ -1,47 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Study Planner</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Study Planner</title>
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 
-  <!-- Font Awesome for Icons -->
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css" />
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
+
 <body>
-  <div class="container">
+
+<div class="container">
+
+    <!-- Header -->
     <div class="header">
-      <h1>📚 Smart Study Planner</h1>
-      <p class="quote">"Code. Learn. Repeat. Great things take time. 🚀"</p>
-      <button id="themeToggle"><i class="fas fa-moon"></i></button>
+        <div>
+            <h1>📚 Smart Study Planner</h1>
+            <p class="quote">
+                "Code. Learn. Repeat. Great things take time. 🚀"
+            </p>
+        </div>
+
+        <button id="themeToggle">🌙</button>
     </div>
 
+    <!-- Statistics -->
+    <div class="stats-container">
+
+        <div class="stat-card">
+            <h3 id="totalTasks">0</h3>
+            <p>Total Tasks</p>
+        </div>
+
+        <div class="stat-card">
+            <h3 id="completedTasks">0</h3>
+            <p>Completed</p>
+        </div>
+
+        <div class="stat-card">
+            <h3 id="pendingTasks">0</h3>
+            <p>Pending</p>
+        </div>
+
+    </div>
+
+    <!-- Search -->
+    <div class="search-box">
+        <input
+            type="text"
+            id="searchTask"
+            placeholder="🔍 Search Tasks..."
+        >
+    </div>
+
+    <!-- Add Task -->
     <div class="task-input">
-      <input type="text" id="subject" placeholder="Enter Subject" required>
-      <input type="text" id="topic" placeholder="Enter Topic" required>
-      <input type="date" id="dueDate" required>
-      <button id="addTaskBtn"><i class="fas fa-plus"></i> Add Task</button>
+
+        <input
+            type="text"
+            id="subject"
+            placeholder="Enter Subject"
+        >
+
+        <input
+            type="text"
+            id="topic"
+            placeholder="Enter Topic"
+        >
+
+        <input
+            type="date"
+            id="dueDate"
+        >
+
+        <select id="priority">
+            <option value="High">🔴 High Priority</option>
+            <option value="Medium">🟡 Medium Priority</option>
+            <option value="Low">🟢 Low Priority</option>
+        </select>
+
+        <button id="addTaskBtn">
+            ➕ Add Task
+        </button>
+
     </div>
 
+    <!-- Task List -->
     <div class="task-list">
-      <h2>Your Study Tasks</h2>
-      <ul id="taskContainer"></ul>
+
+        <h2>Your Study Tasks</h2>
+
+        <ul id="taskContainer"></ul>
+
     </div>
 
+    <!-- Progress -->
     <div class="progress-section">
-      <h3>Progress</h3>
-      <div class="progress-bar">
-        <div class="progress" id="progress"></div>
-      </div>
-      <p id="progressText">0% Completed</p>
-    </div>
-  </div>
 
-  <script src="script.js"></script>
+        <h3>Progress</h3>
+
+        <div class="progress-bar">
+            <div
+                class="progress"
+                id="progress"
+            ></div>
+        </div>
+
+        <p id="progressText">
+            0% Completed
+        </p>
+
+    </div>
+
+    <!-- PDF Export -->
+    <div class="export-section">
+
+        <button id="exportPdfBtn">
+            📄 Export Tasks as PDF
+        </button>
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
 </body>
 </html>

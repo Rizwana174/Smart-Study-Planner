@@ -1,115 +1,296 @@
 const subjectInput = document.getElementById("subject");
 const topicInput = document.getElementById("topic");
 const dueDateInput = document.getElementById("dueDate");
+const priorityInput = document.getElementById("priority");
+
 const addTaskBtn = document.getElementById("addTaskBtn");
 const taskContainer = document.getElementById("taskContainer");
+
 const progressBar = document.getElementById("progress");
 const progressText = document.getElementById("progressText");
+
+const totalTasksEl = document.getElementById("totalTasks");
+const completedTasksEl = document.getElementById("completedTasks");
+const pendingTasksEl = document.getElementById("pendingTasks");
+
+const searchTask = document.getElementById("searchTask");
 const themeToggle = document.getElementById("themeToggle");
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 let darkMode = JSON.parse(localStorage.getItem("darkMode")) || false;
 
-// 🌙 Toggle Theme
-themeToggle.addEventListener("click", () => {
-  document.body.classList.toggle("dark-mode");
-  darkMode = document.body.classList.contains("dark-mode");
-  localStorage.setItem("darkMode", darkMode);
-  themeToggle.innerHTML = darkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-});
+/* Theme */
 
 if (darkMode) {
-  document.body.classList.add("dark-mode");
-  themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+    document.body.classList.add("dark-mode");
 }
 
-// 💾 Save Tasks
+themeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+
+    darkMode = document.body.classList.contains("dark-mode");
+
+    localStorage.setItem(
+        "darkMode",
+        JSON.stringify(darkMode)
+    );
+});
+
+/* Storage */
+
 function saveTasks() {
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+    localStorage.setItem(
+        "tasks",
+        JSON.stringify(tasks)
+    );
 }
 
-// 📈 Update Progress
+/* Progress */
+
 function updateProgress() {
-  const total = tasks.length;
-  const completed = tasks.filter(t => t.completed).length;
-  const progress = total === 0 ? 0 : Math.round((completed / total) * 100);
+    const total = tasks.length;
 
-  progressBar.style.width = `${progress}%`;
-  progressText.textContent = `${progress}% Completed`;
+    const completed = tasks.filter(
+        task => task.completed
+    ).length;
+
+    const percentage =
+        total === 0
+            ? 0
+            : Math.round(
+                  (completed / total) * 100
+              );
+
+    progressBar.style.width =
+        percentage + "%";
+
+    progressText.textContent =
+        percentage + "% Completed";
 }
 
-// 🧱 Render Tasks
-function renderTasks() {
-  taskContainer.innerHTML = "";
-  tasks.forEach((task, index) => {
-    const li = document.createElement("li");
-    li.className = `task-item ${task.completed ? "completed" : ""}`;
-    li.innerHTML = `
-      <span>${task.subject} - ${task.topic} (Due: ${task.dueDate})</span>
-      <div class="task-buttons">
-        <button onclick="toggleTask(${index})"><i class="fas fa-check"></i></button>
-        <button onclick="editTask(${index})"><i class="fas fa-edit"></i></button>
-        <button onclick="deleteTask(${index})"><i class="fas fa-trash"></i></button>
-      </div>
-    `;
-    taskContainer.appendChild(li);
-  });
-  updateProgress();
+/* Statistics */
+
+function updateStats() {
+    const total = tasks.length;
+
+    const completed = tasks.filter(
+        task => task.completed
+    ).length;
+
+    totalTasksEl.textContent = total;
+    completedTasksEl.textContent = completed;
+    pendingTasksEl.textContent =
+        total - completed;
 }
 
-// ➕ Add Task
+/* Render */
+
+function renderTasks(list = tasks) {
+    taskContainer.innerHTML = "";
+
+    list.forEach((task, index) => {
+
+        if (!task.priority) {
+            task.priority = "Medium";
+        }
+
+        const li =
+            document.createElement("li");
+
+        li.className =
+            `task-item ${
+                task.completed
+                    ? "completed"
+                    : ""
+            }`;
+
+        const dueDate =
+            new Date(task.dueDate);
+
+        const today =
+            new Date();
+
+        const difference =
+            dueDate - today;
+
+        if (
+            difference <
+                2 * 24 * 60 * 60 * 1000 &&
+            difference > 0 &&
+            !task.completed
+        ) {
+            li.classList.add("urgent");
+        }
+
+        li.innerHTML = `
+            <div>
+                <strong>${task.subject}</strong>
+                <br>
+                ${task.topic}
+                <br>
+                📅 ${task.dueDate}
+                <br>
+                <span class="${task.priority.toLowerCase()}">
+                    ${task.priority}
+                </span>
+            </div>
+
+            <div class="task-buttons">
+                <button onclick="toggleTask(${index})">✔</button>
+                <button onclick="editTask(${index})">✏</button>
+                <button onclick="deleteTask(${index})">🗑</button>
+            </div>
+        `;
+
+        taskContainer.appendChild(li);
+    });
+
+    updateProgress();
+    updateStats();
+}
+
+/* Add Task */
+
 function addTask() {
-  if (!subjectInput.value || !topicInput.value || !dueDateInput.value) {
-    alert("Please fill all fields!");
-    return;
-  }
 
-  const newTask = {
-    subject: subjectInput.value,
-    topic: topicInput.value,
-    dueDate: dueDateInput.value,
-    completed: false
-  };
+    if (
+        !subjectInput.value.trim() ||
+        !topicInput.value.trim() ||
+        !dueDateInput.value
+    ) {
+        alert("Please fill all fields");
+        return;
+    }
 
-  tasks.push(newTask);
-  saveTasks();
-  renderTasks();
+    const task = {
+        subject: subjectInput.value,
+        topic: topicInput.value,
+        dueDate: dueDateInput.value,
+        priority: priorityInput.value,
+        completed: false
+    };
 
-  subjectInput.value = "";
-  topicInput.value = "";
-  dueDateInput.value = "";
+    tasks.push(task);
+
+    saveTasks();
+    renderTasks();
+
+    subjectInput.value = "";
+    topicInput.value = "";
+    dueDateInput.value = "";
 }
 
-// ✔️ Toggle Task Complete
+/* Complete */
+
 function toggleTask(index) {
-  tasks[index].completed = !tasks[index].completed;
-  saveTasks();
-  renderTasks();
-}
+    tasks[index].completed =
+        !tasks[index].completed;
 
-// ✏️ Edit Task
-function editTask(index) {
-  const newSubject = prompt("Edit Subject:", tasks[index].subject);
-  const newTopic = prompt("Edit Topic:", tasks[index].topic);
-  const newDate = prompt("Edit Due Date (YYYY-MM-DD):", tasks[index].dueDate);
-
-  if (newSubject && newTopic && newDate) {
-    tasks[index].subject = newSubject;
-    tasks[index].topic = newTopic;
-    tasks[index].dueDate = newDate;
     saveTasks();
     renderTasks();
-  }
 }
 
-// 🗑️ Delete Task
+/* Delete */
+
 function deleteTask(index) {
-  if (confirm("Delete this task?")) {
-    tasks.splice(index, 1);
-    saveTasks();
-    renderTasks();
-  }
+
+    if (confirm("Delete this task?")) {
+
+        tasks.splice(index, 1);
+
+        saveTasks();
+        renderTasks();
+    }
 }
 
-addTaskBtn.addEventListener("click", addTask);
-window.onload = renderTasks;
+/* Edit */
+
+function editTask(index) {
+
+    const subject = prompt(
+        "Edit Subject",
+        tasks[index].subject
+    );
+
+    const topic = prompt(
+        "Edit Topic",
+        tasks[index].topic
+    );
+
+    if (subject && topic) {
+
+        tasks[index].subject = subject;
+        tasks[index].topic = topic;
+
+        saveTasks();
+        renderTasks();
+    }
+}
+
+/* Search */
+
+searchTask.addEventListener(
+    "keyup",
+    function () {
+
+        const value =
+            this.value.toLowerCase();
+
+        const filtered =
+            tasks.filter(task =>
+                task.subject
+                    .toLowerCase()
+                    .includes(value) ||
+                task.topic
+                    .toLowerCase()
+                    .includes(value)
+            );
+
+        renderTasks(filtered);
+    }
+);
+
+/* PDF Export */
+
+document
+    .getElementById("exportPdfBtn")
+    .addEventListener("click", () => {
+
+        const { jsPDF } =
+            window.jspdf;
+
+        const doc =
+            new jsPDF();
+
+        doc.text(
+            "Smart Study Planner",
+            10,
+            10
+        );
+
+        let y = 20;
+
+        tasks.forEach(task => {
+
+            doc.text(
+                `${task.subject} | ${task.topic} | ${task.priority}`,
+                10,
+                y
+            );
+
+            y += 10;
+        });
+
+        doc.save(
+            "StudyPlanner.pdf"
+        );
+    });
+
+addTaskBtn.addEventListener(
+    "click",
+    addTask
+);
+
+window.onload = () => {
+    renderTasks();
+};
